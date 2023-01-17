@@ -4,9 +4,24 @@ import sublinks from "./data";
 import { useGlobalContext } from "./context";
 
 const Navbar = () => {
-  const { openSidebar } = useGlobalContext();
+  const { openSidebar, openSubmenu, closeSubmenu } = useGlobalContext();
+
+  const displaySubmenu = (e) => {
+    const page = e.target.textContent;
+    const menuBtn = e.target.getBoundingClientRect();
+    const center = (menuBtn.left + menuBtn.right) / 2;
+    const bottom = menuBtn.bottom;
+    openSubmenu(page, { center, bottom });
+  };
+
+  function handleSubmenu(e) {
+    if (!e.target.classList.contains("link-btn")) {
+      closeSubmenu();
+    }
+  }
+
   return (
-    <nav className="nav">
+    <nav className="nav" onMouseOver={handleSubmenu}>
       <div className="nav-center">
         <div className="nav-header">
           <img src={logo} alt="logo" className="nav-logo" />
@@ -15,11 +30,13 @@ const Navbar = () => {
           </button>
         </div>
         <ul className="nav-links">
-          {sublinks.map((link) => {
+          {sublinks.map((link, index) => {
             const { page } = link;
             return (
-              <li>
-                <button className="link-btn">{page}</button>
+              <li key={index}>
+                <button className="link-btn" onMouseOver={displaySubmenu}>
+                  {page}
+                </button>
               </li>
             );
           })}

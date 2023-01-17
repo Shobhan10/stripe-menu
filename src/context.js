@@ -1,9 +1,13 @@
 import { createContext, useContext, useState } from "react";
+import sublinks from "./data";
 
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const [isSidebar, setIsSidebar] = useState(false);
+  const [isSubmenu, setIsSubmenu] = useState(false);
+  const [location, setLocation] = useState({});
+  const [page, setPage] = useState({ page: "", links: [] });
 
   function openSidebar() {
     setIsSidebar(true);
@@ -12,11 +16,28 @@ export const AppProvider = ({ children }) => {
     setIsSidebar(false);
   }
 
-  return (
-    <AppContext.Provider value={{ isSidebar, openSidebar, closeSidebar }}>
-      {children}
-    </AppContext.Provider>
-  );
+  function openSubmenu(text, coordinates) {
+    setLocation(coordinates);
+    const pageData = sublinks.find((link) => link.page === text);
+    setPage(pageData);
+    setIsSubmenu(true);
+  }
+  function closeSubmenu() {
+    setIsSubmenu(false);
+  }
+
+  const value = {
+    isSidebar,
+    openSidebar,
+    closeSidebar,
+    isSubmenu,
+    openSubmenu,
+    closeSubmenu,
+    location,
+    page,
+  };
+
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 
 export const useGlobalContext = () => {
