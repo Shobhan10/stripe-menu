@@ -10,7 +10,7 @@ const Navbar = () => {
     const page = e.target.textContent;
     const menuBtn = e.target.getBoundingClientRect();
     const center = (menuBtn.left + menuBtn.right) / 2;
-    const bottom = menuBtn.bottom;
+    const bottom = menuBtn.bottom - 3;
     openSubmenu(page, { center, bottom });
   };
 
